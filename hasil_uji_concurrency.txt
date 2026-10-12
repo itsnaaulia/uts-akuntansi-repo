@@ -1,0 +1,15 @@
+=== Skenario A - Trigger saja (baris dikunci di dalam trigger), READ COMMITTED ===
+Kasir A: exit=1 ERROR:  Stok RACE-1 tidak mencukupi: tersedia 0, mutasi -1 (SALE). Transaksi dibatalkan.
+Kasir B: exit=0 OK (transaksi COMMIT)
+Hasil akhir: stok=0  jumlah SALE tercatat=1  (diharapkan stok=0, SALE=1)
+
+=== Skenario B - SELECT ... FOR UPDATE di aplikasi + trigger ===
+Kasir A: exit=0 OK (transaksi COMMIT)
+Kasir B: exit=1 ERROR:  Stok RACE-2 tidak mencukupi: tersedia 0, mutasi -1 (SALE). Transaksi dibatalkan.
+Hasil akhir: stok=0  jumlah SALE tercatat=1  (diharapkan stok=0, SALE=1)
+
+=== Skenario C - SERIALIZABLE (satu sesi gagal 40001 lalu harus retry) ===
+Kasir A: exit=0 OK (transaksi COMMIT)
+Kasir B: exit=1 ERROR:  could not serialize access due to concurrent update
+Hasil akhir: stok=0  jumlah SALE tercatat=1  (diharapkan stok=0, SALE=1)
+

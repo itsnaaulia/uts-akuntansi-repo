@@ -1,0 +1,56 @@
+ hasil |                              uji                               |                                              detail                                               
+-------+----------------------------------------------------------------+---------------------------------------------------------------------------------------------------
+ PASS  | 1.2 debit negatif ditolak                                      | 23514: new row for relation "journal_lines" violates check constraint "chk_jl_non_negative"
+ PASS  | 1.2 kredit negatif ditolak                                     | 23514: new row for relation "journal_lines" violates check constraint "chk_jl_non_negative"
+ PASS  | 1.2 debit=0 & kredit=0 ditolak                                 | 23514: new row for relation "journal_lines" violates check constraint "chk_jl_not_both_zero"
+ PASS  | 1.2 FK akun tidak ada ditolak                                  | 23503: insert or update on table "journal_lines" violates foreign key constraint "journal_lines_a
+ PASS  | 1.2 debit & kredit sekaligus >0 ditolak (penguatan)            | 23514: new row for relation "journal_lines" violates check constraint "chk_jl_one_side"
+ PASS  | 1.2 status posting ilegal ditolak                              | 23514: Jurnal harus dibuat berstatus DRAFT lalu diposting (header T-X).
+ PASS  | 3.x posting jurnal tidak seimbang ditolak                      | 23514: Jurnal T-002 tidak seimbang: total debit 100.00 <> total kredit 90.00.
+ PASS  | 3.x header langsung POSTED ditolak (bypass API)                | 23514: Jurnal harus dibuat berstatus DRAFT lalu diposting (header T-003).
+ PASS  | 3.x posting jurnal 1 baris ditolak                             | 23514: Jurnal T-004 minimal memiliki 2 baris (ditemukan 1).
+ PASS  | 3.2 jurnal seimbang berhasil POSTED + checksum 64 hex          | 
+ PASS  | 3.2 UPDATE header POSTED ditolak                               | 23001: Jurnal T-002 berstatus POSTED dan tidak dapat diubah. Gunakan jurnal pembalik (fn_reverse_
+ PASS  | 3.2 DELETE header POSTED ditolak                               | 23001: Jurnal T-002 berstatus POSTED dan tidak dapat dihapus. Gunakan jurnal pembalik (fn_reverse
+ PASS  | 3.2 UPDATE baris milik POSTED ditolak                          | 23001: Baris jurnal milik header 3 (POSTED) tidak dapat di-UPDATE . Gunakan jurnal pembalik.
+ PASS  | 3.2 DELETE baris milik POSTED ditolak                          | 23001: Baris jurnal milik header 3 (POSTED) tidak dapat di-DELETE . Gunakan jurnal pembalik.
+ PASS  | 3.2 INSERT baris ke header POSTED ditolak                      | 23001: Baris jurnal milik header 3 (POSTED) tidak dapat di-INSERT . Gunakan jurnal pembalik.
+ PASS  | 3.2 TRUNCATE journal_lines ditolak                             | 23001: journal_lines bersifat append-only: TRUNCATE ditolak.
+ PASS  | 3.2 UPDATE audit_log ditolak                                   | 23001: audit_log bersifat append-only: UPDATE ditolak.
+ PASS  | 3.2 DELETE audit_log ditolak                                   | 23001: audit_log bersifat append-only: DELETE ditolak.
+ PASS  | 3.2 pemalsuan hash lewat UPDATE ditolak                        | 23001: Jurnal T-002 berstatus POSTED dan tidak dapat diubah. Gunakan jurnal pembalik (fn_reverse_
+ PASS  | 3.2 created_by/created_at tidak bisa dipalsukan                | 
+ PASS  | 3.2 jurnal pembalik terbentuk & POSTED                         | 
+ PASS  | 3.2 pembalik menukar debit/kredit (net = 0 per akun)           | 
+ PASS  | 3.2 membalik dua kali ditolak                                  | P0001: Jurnal T-002 sudah pernah dibalik.
+ PASS  | 3.2 membalik jurnal DRAFT ditolak                              | P0001: Hanya jurnal POSTED yang dapat dibalik (status saat ini: DRAFT).
+ PASS  | 3.2 checksum mendeteksi manipulasi di luar aplikasi            | 
+ PASS  | 3.2 jurnal lain tetap utuh                                     | 
+ PASS  | 2.x stok awal != 0 ditolak                                     | 23514: Stok awal harus 0; isi melalui transaksi PURCHASE/ADJUSTMENT agar terjurnal.
+ PASS  | 2.1a PURCHASE 10 -> stok 10                                    | 
+ PASS  | 2.1a SALE 4 -> stok 6                                          | 
+ PASS  | 2.1a ADJUSTMENT -1 -> stok 5                                   | 
+ PASS  | 2.1b SALE melebihi stok ditolak (RAISE EXCEPTION)              | 23514: Stok BRG-001 tidak mencukupi: tersedia 5, mutasi -6 (SALE). Transaksi dibatalkan.
+ PASS  | 2.1b stok & log tetap utuh setelah penolakan                   | 
+ PASS  | 2.x qty SALE negatif ditolak                                   | 23514: qty -2 harus > 0 untuk transaksi SALE.
+ PASS  | 2.x barang tidak dikenal ditolak                               | 23503: insert or update on table "inventory_transactions" violates foreign key constraint "invent
+ PASS  | 2.x ubah stock_qty langsung ditolak                            | 23001: stock_qty tidak boleh diubah langsung; catat melalui inventory_transactions.
+ PASS  | 2.x ubah/hapus log transaksi ditolak                           | 23001: inventory_transactions bersifat append-only: DELETE ditolak.
+ PASS  | 2.1c jurnal otomatis: PURCHASE Dr 1301 / Kr 2101 = 100.000.000 | 
+ PASS  | 2.1c jurnal otomatis: SALE Dr 5101 / Kr 1301 = 40.000.000      | 
+ PASS  | 2.1c ADJUSTMENT(-) Dr 5901 / Kr 1301 = 10.000.000              | 
+ PASS  | 2.x rekonsiliasi: saldo akun 1301 = stok fisik x unit_cost     | 
+ PASS  | GL: total debit = total kredit seluruh jurnal POSTED           | 
+ PASS  | Audit log terisi                                               | 
+ PASS  | 3.1 RPC voucher seimbang -> POSTED                             | 
+ PASS  | 3.1 RPC voucher tidak seimbang ditolak                         | 23514: Jurnal VCO-002 tidak seimbang: total debit 500000.00 <> total kredit 400000.00.
+ PASS  | 3.1 RPC tanpa kredit kas ditolak                               | 23514: Voucher kas keluar harus mengkredit akun Kas/Bank (kelompok 11xx) dan tidak boleh mendebit
+ PASS  | 3.1 RPC akun tidak dikenal ditolak                             | 23503: Kode akun tidak dikenal: 9999
+ PASS  | 3.1 voucher gagal tidak meninggalkan sisa data (atomik)        | 
+(47 rows)
+
+ lulus | gagal | total 
+-------+-------+-------
+    47 |     0 |    47
+(1 row)
+

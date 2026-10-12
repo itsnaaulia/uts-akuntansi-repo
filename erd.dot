@@ -1,0 +1,29 @@
+digraph ERD {
+  rankdir=LR; nodesep=0.9; ranksep=1.6; splines=line;
+  node [shape=plaintext, fontname="Helvetica", fontsize=11];
+  edge [fontname="Helvetica", fontsize=10, color="#475569", arrowhead=none];
+  {rank=same; coa; jh}
+  coa [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5">
+   <TR><TD BGCOLOR="#1e3a8a"><FONT COLOR="white"><B>chart_of_accounts</B></FONT></TD></TR>
+   <TR><TD ALIGN="LEFT"><B>PK</B> account_id</TD></TR>
+   <TR><TD ALIGN="LEFT">account_code <I>(UNIQUE)</I></TD></TR>
+   <TR><TD ALIGN="LEFT">account_name</TD></TR>
+   <TR><TD ALIGN="LEFT">normal_balance <I>(DEBIT/CREDIT)</I></TD></TR>
+   <TR><TD ALIGN="LEFT">report_classification</TD></TR></TABLE>>];
+  jl [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5">
+   <TR><TD BGCOLOR="#1e3a8a"><FONT COLOR="white"><B>journal_lines</B></FONT></TD></TR>
+   <TR><TD ALIGN="LEFT"><B>PK</B> line_id</TD></TR>
+   <TR><TD ALIGN="LEFT"><B>FK</B> header_id</TD></TR>
+   <TR><TD ALIGN="LEFT"><B>FK</B> account_id</TD></TR>
+   <TR><TD ALIGN="LEFT">debit &gt;= 0</TD></TR>
+   <TR><TD ALIGN="LEFT">credit &gt;= 0</TD></TR></TABLE>>];
+  jh [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5">
+   <TR><TD BGCOLOR="#1e3a8a"><FONT COLOR="white"><B>journal_headers</B></FONT></TD></TR>
+   <TR><TD ALIGN="LEFT"><B>PK</B> header_id</TD></TR>
+   <TR><TD ALIGN="LEFT">trx_date</TD></TR>
+   <TR><TD ALIGN="LEFT">ref_no <I>(UNIQUE)</I></TD></TR>
+   <TR><TD ALIGN="LEFT">description</TD></TR>
+   <TR><TD ALIGN="LEFT">posting_status</TD></TR></TABLE>>];
+  jh -> jl [taillabel="1", headlabel="N (min. 2)", label="memiliki", arrowhead=crow, labeldistance=2.4];
+  coa -> jl [taillabel="1", headlabel="N", label="dipakai di", arrowhead=crow, labeldistance=2.4];
+}
